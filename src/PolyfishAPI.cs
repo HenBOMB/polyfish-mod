@@ -98,17 +98,43 @@ namespace PolyfishAI.src
         /// <summary>
         /// Sends the current replay to the PolyfishAI server for saving.
         /// </summary>
-        public void SaveReplaySync(ReplayInterface replayInterface)
+        public void SaveReplaySync(string initialGameStateJson, ReplayInterface replayInterface)
         {
             try
             {
-                _logger.LogInfo("Queued replay save...");
-                _ = SendRequestAsync("replay/save", PolyfishSerializer.SerializeReplay(replayInterface));
+                _ = SendRequestAsync("replay/save", PolyfishSerializer.SerializeReplay(initialGameStateJson, replayInterface));
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed to save replay state: {ex.Message}");
+                _logger.LogError($"Failed to save replay stat e: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Checks if a replay with the given UUID already exists in the DB.
+        /// Returns true if we should PROCEED (replay does NOT exist), false if we should SKIP.
+        /// </summary>
+        public async Task<bool> CheckReplayExistsByUUIDAsync(string uuid)
+        {
+            try
+            {
+                var payload = JsonSerializer.Serialize(new { uuid = uuid });
+                var response = await SendRequestAsync("replay/check", payload);
+                if (response != null)
+                {
+                    using var doc = JsonDocument.Parse(response);
+                    if (doc.RootElement.TryGetProperty("proceed", out var proceedProp))
+                    {
+                        return proceedProp.GetBoolean();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to check replay existence by UUID: {ex.Message}");
+            }
+            // Default to proceeding if the check fails
+            return true;
         }
     }
 
