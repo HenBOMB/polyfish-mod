@@ -417,6 +417,11 @@ namespace PolyfishAI.src
                         result["type"] = 23; // AbilityType::EnchantAnimal
                         result["target"] = GetIdx(improv.Coordinates, size);
                     }
+                    else if (improv.Type == ImprovementData.Type.StarFishing)
+                    {
+                        result["moveType"] = 8; // MoveType::Capture
+                        result["src"] = GetIdx(improv.Coordinates, size);
+                    }
                     // TODO: Burn Spores?, Cultivate?
                     else 
                     {

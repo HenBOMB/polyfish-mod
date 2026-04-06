@@ -39,7 +39,7 @@ namespace PolyfishAI.src
             // Overclock the engine to speed up replay extraction
             Application.targetFrameRate = -1; // Uncap framerate
             QualitySettings.vSyncCount = 0;   // Disable VSync
-            Time.timeScale = 20f;             // Run logic 20x faster
+            // Time.timeScale = 40f;             // Run logic 40x faster
 
             sequencer = new ReplaySequencer();
 
@@ -645,11 +645,11 @@ namespace PolyfishAI.src
                     replayInterface.timeline.Pause();
                 });
 
-                await Task.Delay(200);
+                await Task.Delay(400);
                 replayInterface.timeline.Play();
-                await Task.Delay(200);
+                await Task.Delay(400);
                 replayInterface.timeline.Pause();
-                await Task.Delay(200);
+                await Task.Delay(400);
 
                 // 2. Capture Snapshot
                 HashSet<int> snapshot = new();
@@ -699,11 +699,11 @@ namespace PolyfishAI.src
                     replayInterface.timeline.Pause();
                 });
                 
-                await Task.Delay(200);
+                await Task.Delay(400);
                 replayInterface.timeline.Play();
-                await Task.Delay(200);
+                await Task.Delay(400);
                 replayInterface.timeline.Pause();
-                await Task.Delay(200);
+                await Task.Delay(400);
 
                 // 4. Capture Final and Diff
                 bool diffDone = false;
